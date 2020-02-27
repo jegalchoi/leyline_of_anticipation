@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { CardsContainer } from './CardsContainer'
 import { ButtonContainer } from './ButtonContainer'
-import { Stats } from './Stats'
 import THB from "./sets/THB.json"
 
 export default class App extends Component {
@@ -16,9 +15,10 @@ export default class App extends Component {
         Red: 0,
         White: 0
       },
+      totalCost: 0,
       cards:[],
       filteredCards: [],
-      totalCost: 0
+      
     }
   }
   componentDidMount() {
@@ -74,11 +74,15 @@ export default class App extends Component {
     })
   }
   handleFilterCards = () => {
-    const totalCost = this.state.totalCost
+    const { Colorless: X, Black: B, Blue: U, Green: G, Red: R, White: W } = this.state.castingCost
+    const checkCost = (manaCost) => {
+      return true
+    }
     this.setState(prevState => {
+      const totalCost = prevState.totalCost
+      const { Colorless, Black, Blue, Green, Red, White } = prevState.castingCost
       let cards = prevState.cards
-      // cards = cards.map(card => card.convertedManaCost)
-      cards = cards.filter(card => card.convertedManaCost <= totalCost)
+      cards = cards.filter(card => card.convertedManaCost <= totalCost && checkCost(card.mana))
       console.log(cards)
       return { filteredCards: cards }
     })
@@ -90,10 +94,6 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <Stats
-          totalCost={this.state.totalCost}
-          filterCards={this.handleFilterCards}
-        />
         <button>STATE</button>
         <h1>{this.state.totalCost}</h1>
         {["Colorless", "Black", "Blue", "Green", "Red", "White"].map(
