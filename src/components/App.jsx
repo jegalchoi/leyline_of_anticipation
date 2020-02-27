@@ -74,15 +74,41 @@ export default class App extends Component {
     })
   }
   handleFilterCards = () => {
-    const { Colorless: X, Black: B, Blue: U, Green: G, Red: R, White: W } = this.state.castingCost
     const checkCost = (manaCost) => {
-      return true
+      // console.log(manaCost)
+      let cardCastingCost = {}
+
+      [
+        ["Colorless", /[1 - 9]/g],
+        ["Black", /B/g],
+        ["Blue", /U/g],
+        ["Green", /G/g],
+        ["Red", /R/g],
+        ["White", /W/g]
+      ].forEach(color => {
+        if (manaCost.match(color[1]) == null) {
+          cardCastingCost[color[0]] = manaCost.match(color[1])
+        } else {
+          cardCastingCost[color[0]] = manaCost.match(color[1]).length
+        }
+      })
+      console.log(cardCastingCost)
+      
+      let status = true
+      for (const color in cardCastingCost) {
+        // console.log(color)
+        if (cardCastingCost[color] != null && cardCastingCost[color] > this.state.castingCost[color]) {
+          status = false
+        }
+      }
+      console.log(status)
+      return status
     }
     this.setState(prevState => {
       const totalCost = prevState.totalCost
       const { Colorless, Black, Blue, Green, Red, White } = prevState.castingCost
       let cards = prevState.cards
-      cards = cards.filter(card => card.convertedManaCost <= totalCost && checkCost(card.mana))
+      cards = cards.filter(card => card.convertedManaCost <= totalCost && checkCost(card.manaCost))
       console.log(cards)
       return { filteredCards: cards }
     })
