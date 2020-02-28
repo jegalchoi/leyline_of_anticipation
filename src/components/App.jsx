@@ -27,11 +27,20 @@ export default class App extends Component {
       filteredCards: [],
     }
   }
-  handleSetCards = e => {
-    this.handleSetChange(e)
-    setTimeout(() => this.handlePrepareCards(), 10)
+  componentDidMount() {
+    this.showAllInstants()
   }
-  handleSetChange = e => {
+  showAllInstants = () => {
+    this.handlePrepareCards()
+    setTimeout(() => this.setState({
+      filteredCards: this.state.cards
+    }), 10)
+  }
+  handleSetCards = e => {
+    this.clearState(e)
+    setTimeout(() => this.showAllInstants(), 10)
+  }
+  clearState = e => {
     // console.log(e.target.value)
     this.setState({
       set: e.target.value,
@@ -61,7 +70,7 @@ export default class App extends Component {
   }
   selectSet = () => {
     const set = this.state.library[this.state.set].cards
-    console.log(set);
+    // console.log(set)
     return set.map(card => {
       return {
         name: card.name,
@@ -113,6 +122,19 @@ export default class App extends Component {
     })
     // console.log(this.state.castingCost)
   }
+  
+  handleRefreshCards = () => {
+    this.handleUpdateTotalCost()
+    setTimeout(() => this.handleFilterCards(), 10)
+  }
+  handleUpdateTotalCost = () => {
+    this.setState(prevState => {
+      let totalCost = prevState.totalCost
+      totalCost = Object.values(prevState.castingCost).reduce((a, c) => a + c, 0)
+      // console.log(totalCost)
+      return { totalCost }
+    })
+  }
   handleFilterCards = () => {
     this.setState(prevState => {
       const totalCost = prevState.totalCost
@@ -158,18 +180,6 @@ export default class App extends Component {
     }
     // console.log(status)
     return status
-  }
-  handleRefreshCards = () => {
-    this.handleUpdateTotalCost()
-    setTimeout(() => this.handleFilterCards(), 10)
-  }
-  handleUpdateTotalCost = () => {
-    this.setState(prevState => {
-      let totalCost = prevState.totalCost
-      totalCost = Object.values(prevState.castingCost).reduce((a, c) => a + c, 0)
-      // console.log(totalCost)
-      return { totalCost }
-    })
   }
   render() {
     return (
