@@ -11,7 +11,6 @@ export const Sets = ({ set, onChange }) => {
         checked={set === "THB"}
         onChange={e => onChange(e)}
       />
-
       <label>Throne of Eldraine</label>
       <input
         type="radio"

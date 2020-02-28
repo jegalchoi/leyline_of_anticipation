@@ -47,41 +47,49 @@ export default class App extends Component {
       return { totalCost }
     })
   }
-  handleFilterCards = () => {
-    const checkCost = (manaCost) => {
-      // console.log(manaCost)
-      let cardCastingCost = {};
-      [
-        ["Colorless", /[1 - 9]/g],
-        ["Black", /B/g],
-        ["Blue", /U/g],
-        ["Green", /G/g],
-        ["Red", /R/g],
-        ["White", /W/g]
-      ].forEach(color => {
-        if (manaCost.match(color[1]) == null) {
-          cardCastingCost[color[0]] = 0
-        } else {
-          cardCastingCost[color[0]] = manaCost.match(color[1]).length
-        }
-      })
-      // console.log(cardCastingCost)
-
-      let status = true
-      for (const color in cardCastingCost) {
-        // console.log(color)
-        if (cardCastingCost[color] != null && cardCastingCost[color] > this.state.castingCost[color]) {
-          status = false
-        }
+  formatCardCastingCost = manaCost => {
+    // console.log(manaCost)
+    let cardCastingCost = {};
+    [
+      ["Colorless", /[1 - 9]/g],
+      ["Black", /B/g],
+      ["Blue", /U/g],
+      ["Green", /G/g],
+      ["Red", /R/g],
+      ["White", /W/g]
+    ].forEach(color => {
+      if (manaCost.match(color[1]) == null) {
+        cardCastingCost[color[0]] = 0
+      } else {
+        cardCastingCost[color[0]] = manaCost.match(color[1]).length
       }
-      // console.log(status)
-      return status
+    })
+    // console.log(cardCastingCost)
+    return cardCastingCost
+  }
+  checkCost = (cardCastingCost, castingCost) => {
+    // console.log(cardCastingCost)
+    // console.log(castingCost)
+    let status = true
+    for (const color in cardCastingCost) {
+      // console.log(color)
+      if (cardCastingCost[color] != null && cardCastingCost[color] > castingCost[color]) {
+        status = false
+      }
     }
+    // console.log(status)
+    return status
+  }
+  filterCard = (manaCost, castingCost) => {
+    const cardCastingCost = this.formatCardCastingCost(manaCost)
+    return this.checkCost(cardCastingCost, castingCost)
+  }
+  handleFilterCards = () => {
     this.setState(prevState => {
       const totalCost = prevState.totalCost
       const { Colorless, Black, Blue, Green, Red, White } = prevState.castingCost
       let cards = prevState.cards
-      cards = cards.filter(card => card.convertedManaCost <= totalCost && checkCost(card.manaCost))
+      cards = cards.filter(card => card.convertedManaCost <= totalCost && this.filterCard(card.manaCost, prevState.castingCost))
       console.log(cards)
       return { filteredCards: cards }
     })
