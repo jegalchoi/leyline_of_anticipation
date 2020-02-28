@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { CardsContainer } from './CardsContainer'
 import { ButtonContainer } from './ButtonContainer'
+// import { Sets } from './Sets'
 import THB from "./sets/THB.json"
+import ELD from './sets/ELD.json'
 
 export default class App extends Component {
   constructor() {
@@ -16,43 +18,14 @@ export default class App extends Component {
         White: 0
       },
       totalCost: 0,
-      cards:[],
+      library: {
+        THB: THB,
+        ELD: ELD,
+      },
+      set: 'THB',
+      cards: [],
       filteredCards: [],
-      
     }
-  }
-  componentDidMount() {
-    const set = THB.cards
-    const setSelectedFields = set.map(card => {
-      return {
-      name: card.name,
-      type: card.type,
-      text: card.text,
-      frameEffect: card.frameEffect,
-      colors: card.colors,
-      convertedManaCost: card.convertedManaCost,
-      manaCost: card.manaCost,
-      link: `https://api.scryfall.com/cards/${card.scryfallId}`,
-      number: card.number,
-    }})
-    const setRemovedDupes = 
-      setSelectedFields.filter(card => 
-        card.text !== undefined &&
-        card.frameEffect !== "extendedart" &&
-        card.frameEffect !== "inverted"
-      )
-    const setFiltered = setRemovedDupes.filter(card => card.type === "Instant" || card.text.includes("Flash"))
-
-    const setFetchedImages = setFiltered.map(card => {
-      fetch(card.link)
-        .then(response => response.json())
-        .then(json => json.image_uris.small)
-        .then(json => { (card.img = json) })
-      return card
-    })
-    this.setState({
-      cards: setFetchedImages
-    })
   }
   handleChangeCastingCost = (color, delta) => {
     this.setState(prevState => {
@@ -70,14 +43,14 @@ export default class App extends Component {
     this.setState(prevState => {
       let totalCost = prevState.totalCost
       totalCost = Object.values(prevState.castingCost).reduce((a, c) => a + c, 0)
+      // console.log(totalCost)
       return { totalCost }
     })
   }
   handleFilterCards = () => {
     const checkCost = (manaCost) => {
       // console.log(manaCost)
-      let cardCastingCost = {}
-
+      let cardCastingCost = {};
       [
         ["Colorless", /[1 - 9]/g],
         ["Black", /B/g],
@@ -87,13 +60,13 @@ export default class App extends Component {
         ["White", /W/g]
       ].forEach(color => {
         if (manaCost.match(color[1]) == null) {
-          cardCastingCost[color[0]] = manaCost.match(color[1])
+          cardCastingCost[color[0]] = 0
         } else {
           cardCastingCost[color[0]] = manaCost.match(color[1]).length
         }
       })
-      console.log(cardCastingCost)
-      
+      // console.log(cardCastingCost)
+
       let status = true
       for (const color in cardCastingCost) {
         // console.log(color)
@@ -101,7 +74,7 @@ export default class App extends Component {
           status = false
         }
       }
-      console.log(status)
+      // console.log(status)
       return status
     }
     this.setState(prevState => {
@@ -117,11 +90,92 @@ export default class App extends Component {
     this.handleUpdateTotalCost()
     setTimeout(() => this.handleFilterCards(), 10)
   }
+  handleSetChange = e => {
+    // console.log(e.target.value)
+    this.setState({
+      set: e.target.value,
+      castingCost: {
+        Colorless: 0,
+        Black: 0,
+        Blue: 0,
+        Green: 0,
+        Red: 0,
+        White: 0
+      },
+      totalCost: 0,
+      filteredCards: [],
+    })
+    // console.log(this.state.set)
+    // console.log(this.state.library[this.state.set])
+  }
+  handlePrepareCards = () => {
+    const set = this.state.library[this.state.set].cards;
+    // console.log(set);
+    const setSelectedFields = set.map(card => {
+      return {
+        name: card.name,
+        type: card.type,
+        text: card.text,
+        frameEffect: card.frameEffect,
+        colors: card.colors,
+        convertedManaCost: card.convertedManaCost,
+        manaCost: card.manaCost,
+        link: `https://api.scryfall.com/cards/${card.scryfallId}`,
+        number: card.number
+      };
+    });
+    const setRemovedDupes = setSelectedFields.filter(
+      card =>
+        card.text !== undefined &&
+        card.frameEffect !== "extendedart" &&
+        card.frameEffect !== "inverted"
+    );
+    const setFiltered = setRemovedDupes.filter(
+      card => card.type === "Instant" || card.text.includes("Flash")
+    );
+
+    const setFetchedImages = setFiltered.map(card => {
+      fetch(card.link)
+        .then(response => response.json())
+        .then(json => json.image_uris.small)
+        .then(json => {
+          card.img = json;
+        });
+      return card;
+    });
+    this.setState({
+      cards: setFetchedImages
+    });
+    // console.log(this.state)
+  }
+
+  handleFinalizeCards = e => {
+    this.handleSetChange(e)
+    setTimeout(() => this.handlePrepareCards(), 10)
+  }
   render() {
     return (
       <div>
-        <button>STATE</button>
-        <h1>{this.state.totalCost}</h1>
+        <label>Theros Beyond Death</label>
+        <input
+          type="radio"
+          name="set"
+          value="THB"
+          checked={this.state.set === "THB"}
+          onChange={this.handleFinalizeCards}
+        ></input>
+
+        <label>Throne of Eldraine</label>
+        <input
+          type="radio"
+          name="set"
+          value="ELD"
+          checked={this.state.set === "ELD"}
+          onChange={this.handleFinalizeCards}
+        ></input>
+
+        <button onClick={() => console.log(this.state)}>STATE</button>
+        <h1>Total Casting Cost: {this.state.totalCost}</h1>
         {["Colorless", "Black", "Blue", "Green", "Red", "White"].map(
           (color, idx) => (
             <ButtonContainer
