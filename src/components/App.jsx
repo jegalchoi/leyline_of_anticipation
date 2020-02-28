@@ -27,6 +27,80 @@ export default class App extends Component {
       filteredCards: [],
     }
   }
+  handleSetCards = e => {
+    this.handleSetChange(e)
+    setTimeout(() => this.handlePrepareCards(), 10)
+  }
+  handleSetChange = e => {
+    // console.log(e.target.value)
+    this.setState({
+      set: e.target.value,
+      castingCost: {
+        Colorless: 0,
+        Black: 0,
+        Blue: 0,
+        Green: 0,
+        Red: 0,
+        White: 0
+      },
+      totalCost: 0,
+      filteredCards: [],
+    })
+    // console.log(this.state.set)
+    // console.log(this.state.library[this.state.set])
+  }
+  handlePrepareCards = () => {
+    const setSelectedFields = this.selectSet()
+    const setRemovedDupes = this.setRemoveDupes(setSelectedFields)
+    const setFiltered = this.setFilter(setRemovedDupes)
+    const setFetchedImages = this.setFetchImages(setFiltered)
+    this.setState({
+      cards: setFetchedImages
+    });
+    // console.log(this.state)
+  }
+  selectSet = () => {
+    const set = this.state.library[this.state.set].cards
+    console.log(set);
+    return set.map(card => {
+      return {
+        name: card.name,
+        type: card.type,
+        text: card.text,
+        frameEffect: card.frameEffect,
+        colors: card.colors,
+        convertedManaCost: card.convertedManaCost,
+        manaCost: card.manaCost,
+        link: `https://api.scryfall.com/cards/${card.scryfallId}`,
+        number: card.number
+      }
+    })
+  }
+  setRemoveDupes = setSelectedFields => {
+    // console.log(setSelectedFields)
+    return setSelectedFields.filter(
+      card =>
+        card.text !== undefined &&
+        card.frameEffect !== "extendedart" &&
+        card.frameEffect !== "inverted"
+    )
+  }
+  setFilter = setRemovedDupes => {
+    return setRemovedDupes.filter(
+      card => card.type === "Instant" || card.text.includes("Flash")
+    )
+  }
+  setFetchImages = setFiltered => {
+    return setFiltered.map(card => {
+      fetch(card.link)
+        .then(response => response.json())
+        .then(json => json.image_uris.small)
+        .then(json => {
+          card.img = json
+        })
+      return card
+    })
+  }
   handleChangeCastingCost = (color, delta) => {
     this.setState(prevState => {
       let prevCastingCost = prevState.castingCost[color]
@@ -39,13 +113,18 @@ export default class App extends Component {
     })
     // console.log(this.state.castingCost)
   }
-  handleUpdateTotalCost = () => {
+  handleFilterCards = () => {
     this.setState(prevState => {
-      let totalCost = prevState.totalCost
-      totalCost = Object.values(prevState.castingCost).reduce((a, c) => a + c, 0)
-      // console.log(totalCost)
-      return { totalCost }
+      const totalCost = prevState.totalCost
+      let cards = prevState.cards
+      cards = cards.filter(card => card.convertedManaCost <= totalCost && this.filterCard(card.manaCost, prevState.castingCost))
+      console.log(cards)
+      return { filteredCards: cards }
     })
+  }
+  filterCard = (manaCost, selectedCastingCost) => {
+    const cardCastingCost = this.formatCardCastingCost(manaCost)
+    return this.checkCost(cardCastingCost, selectedCastingCost)
   }
   formatCardCastingCost = manaCost => {
     // console.log(manaCost)
@@ -67,104 +146,35 @@ export default class App extends Component {
     // console.log(cardCastingCost)
     return cardCastingCost
   }
-  checkCost = (cardCastingCost, castingCost) => {
+  checkCost = (cardCastingCost, selectedCastingCost) => {
     // console.log(cardCastingCost)
-    // console.log(castingCost)
+    // console.log(selectedCastingCost)
     let status = true
     for (const color in cardCastingCost) {
       // console.log(color)
-      if (cardCastingCost[color] != null && cardCastingCost[color] > castingCost[color]) {
+      if (cardCastingCost[color] != null && cardCastingCost[color] > selectedCastingCost[color]) {
         status = false
       }
     }
     // console.log(status)
     return status
   }
-  filterCard = (manaCost, castingCost) => {
-    const cardCastingCost = this.formatCardCastingCost(manaCost)
-    return this.checkCost(cardCastingCost, castingCost)
-  }
-  handleFilterCards = () => {
-    this.setState(prevState => {
-      const totalCost = prevState.totalCost
-      const { Colorless, Black, Blue, Green, Red, White } = prevState.castingCost
-      let cards = prevState.cards
-      cards = cards.filter(card => card.convertedManaCost <= totalCost && this.filterCard(card.manaCost, prevState.castingCost))
-      console.log(cards)
-      return { filteredCards: cards }
-    })
-  }
   handleRefreshCards = () => {
     this.handleUpdateTotalCost()
     setTimeout(() => this.handleFilterCards(), 10)
   }
-  handleSetChange = e => {
-    // console.log(e.target.value)
-    this.setState({
-      set: e.target.value,
-      castingCost: {
-        Colorless: 0,
-        Black: 0,
-        Blue: 0,
-        Green: 0,
-        Red: 0,
-        White: 0
-      },
-      totalCost: 0,
-      filteredCards: [],
+  handleUpdateTotalCost = () => {
+    this.setState(prevState => {
+      let totalCost = prevState.totalCost
+      totalCost = Object.values(prevState.castingCost).reduce((a, c) => a + c, 0)
+      // console.log(totalCost)
+      return { totalCost }
     })
-    // console.log(this.state.set)
-    // console.log(this.state.library[this.state.set])
-  }
-  handlePrepareCards = () => {
-    const set = this.state.library[this.state.set].cards;
-    // console.log(set);
-    const setSelectedFields = set.map(card => {
-      return {
-        name: card.name,
-        type: card.type,
-        text: card.text,
-        frameEffect: card.frameEffect,
-        colors: card.colors,
-        convertedManaCost: card.convertedManaCost,
-        manaCost: card.manaCost,
-        link: `https://api.scryfall.com/cards/${card.scryfallId}`,
-        number: card.number
-      };
-    });
-    const setRemovedDupes = setSelectedFields.filter(
-      card =>
-        card.text !== undefined &&
-        card.frameEffect !== "extendedart" &&
-        card.frameEffect !== "inverted"
-    );
-    const setFiltered = setRemovedDupes.filter(
-      card => card.type === "Instant" || card.text.includes("Flash")
-    );
-
-    const setFetchedImages = setFiltered.map(card => {
-      fetch(card.link)
-        .then(response => response.json())
-        .then(json => json.image_uris.small)
-        .then(json => {
-          card.img = json;
-        });
-      return card;
-    });
-    this.setState({
-      cards: setFetchedImages
-    });
-    // console.log(this.state)
-  }
-
-  handleFinalizeCards = e => {
-    this.handleSetChange(e)
-    setTimeout(() => this.handlePrepareCards(), 10)
   }
   render() {
     return (
       <div>
-        <Sets set={this.state.set} onChange={this.handleFinalizeCards} />
+        <Sets set={this.state.set} onChange={this.handleSetCards} />
         <button onClick={() => console.log(this.state)}>STATE</button>
         <h1>Total Casting Cost: {this.state.totalCost}</h1>
         {["Colorless", "Black", "Blue", "Green", "Red", "White"].map(
