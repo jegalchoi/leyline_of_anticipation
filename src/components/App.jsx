@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { CardsContainer } from './CardsContainer'
 import { ButtonContainer } from './ButtonContainer'
-// import { Sets } from './Sets'
+import { Sets } from './Sets'
 import THB from "./sets/THB.json"
 import ELD from './sets/ELD.json'
 
@@ -156,24 +156,7 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <label>Theros Beyond Death</label>
-        <input
-          type="radio"
-          name="set"
-          value="THB"
-          checked={this.state.set === "THB"}
-          onChange={this.handleFinalizeCards}
-        ></input>
-
-        <label>Throne of Eldraine</label>
-        <input
-          type="radio"
-          name="set"
-          value="ELD"
-          checked={this.state.set === "ELD"}
-          onChange={this.handleFinalizeCards}
-        ></input>
-
+        <Sets set={this.state.set} onChange={this.handleFinalizeCards} />
         <button onClick={() => console.log(this.state)}>STATE</button>
         <h1>Total Casting Cost: {this.state.totalCost}</h1>
         {["Colorless", "Black", "Blue", "Green", "Red", "White"].map(
