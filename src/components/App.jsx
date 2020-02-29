@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { CardsContainer } from './CardsContainer'
 import { ButtonContainer } from './ButtonContainer'
-import { Sets } from './Sets'
+import { SetsContainer } from './SetsContainer'
 import THB from "./sets/THB.json"
 import ELD from './sets/ELD.json'
 
@@ -37,13 +37,12 @@ export default class App extends Component {
     }), 10)
   }
   handleSetCards = e => {
-    this.clearState(e)
+    this.setSet(e)
     setTimeout(() => this.showAllInstants(), 10)
   }
-  clearState = e => {
+  setSet = e => {
     // console.log(e.target.value)
     this.setState({
-      set: e.target.value,
       castingCost: {
         Colorless: 0,
         Black: 0,
@@ -53,6 +52,8 @@ export default class App extends Component {
         White: 0
       },
       totalCost: 0,
+      set: e.target.value,
+      cards: [],
       filteredCards: [],
     })
     // console.log(this.state.set)
@@ -122,12 +123,11 @@ export default class App extends Component {
     })
     // console.log(this.state.castingCost)
   }
-  
   handleRefreshCards = () => {
-    this.handleUpdateTotalCost()
-    setTimeout(() => this.handleFilterCards(), 10)
+    this.updateTotalCost()
+    setTimeout(() => this.filterCards(), 10)
   }
-  handleUpdateTotalCost = () => {
+  updateTotalCost = () => {
     this.setState(prevState => {
       let totalCost = prevState.totalCost
       totalCost = Object.values(prevState.castingCost).reduce((a, c) => a + c, 0)
@@ -135,7 +135,7 @@ export default class App extends Component {
       return { totalCost }
     })
   }
-  handleFilterCards = () => {
+  filterCards = () => {
     this.setState(prevState => {
       const totalCost = prevState.totalCost
       let cards = prevState.cards
@@ -184,7 +184,7 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <Sets set={this.state.set} onChange={this.handleSetCards} />
+        <SetsContainer library={this.state.library} set={this.state.set} onChange={this.handleSetCards} />
         <button onClick={() => console.log(this.state)}>STATE</button>
         <h1>Total Casting Cost: {this.state.totalCost}</h1>
         {["Colorless", "Black", "Blue", "Green", "Red", "White"].map(
