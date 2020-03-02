@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { CardsContainer } from './CardsContainer'
 import { ButtonContainer } from './ButtonContainer'
 import { SetsContainer } from './SetsContainer'
+import { Stats } from './Stats'
 import THB from "./sets/THB.json"
 import ELD from './sets/ELD.json'
 
@@ -184,9 +185,9 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <SetsContainer library={this.state.library} set={this.state.set} onChange={this.handleSetCards} />
         <button onClick={() => console.log(this.state)}>STATE</button>
-        <h1>Total Casting Cost: {this.state.totalCost}</h1>
+        <SetsContainer library={this.state.library} onChange={this.handleSetCards} />
+        <Stats totalCost={this.state.totalCost} count={this.state.filteredCards.length} />
         {["Colorless", "Black", "Blue", "Green", "Red", "White"].map(
           (color, idx) => (
             <ButtonContainer

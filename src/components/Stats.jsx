@@ -1,11 +1,10 @@
 import React from 'react'
 
-export const Stats = ({totalCost, filterCards}) => {
+export const Stats = ({ totalCost, count }) => {
   return (
     <div>
-      <h1 onChange={() => filterCards()}>
-        STATS - {totalCost} -Total Cost
-      </h1>
+      <h1>Total Casting Cost: {totalCost} - stats</h1>
+      <h1>Total Possibilities: {count} - stats</h1>
     </div>
   );
 }

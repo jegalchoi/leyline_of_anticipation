@@ -8,7 +8,7 @@ export const Set = ({ set, onChange }) => {
         type="radio"
         name="set"
         value={set}
-        checked={set === { set }}
+        checked={set === {set}}
         onChange={e => onChange(e)}
       />
     </div>
