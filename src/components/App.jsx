@@ -131,7 +131,7 @@ export default class App extends Component {
       // console.log(newState)
       newState.castingCost[color] = prevCastingCost + delta
       // console.log(newState.castingCost)
-      return newState
+      return (prevCastingCost + delta === -1 ? null : newState)
     })
     // console.log(this.state.castingCost)
   }
@@ -175,7 +175,6 @@ export default class App extends Component {
       } else {
         cardCastingCost[color[0]] = manaCost.match(color[1]).length
       }
-      
     })
     console.log(cardCastingCost)
     return cardCastingCost
