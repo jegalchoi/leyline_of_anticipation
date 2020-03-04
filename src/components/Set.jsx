@@ -1,16 +1,29 @@
 import React from 'react'
+import {ToggleButton, ButtonGroup, Button } from 'react-bootstrap'
 
-export const Set = ({ set, onChange }) => {
+export const Set = ({ set, onChange, defaultSet }) => {
+  console.log(defaultSet)
   return (
-    <div>
-      <label>{set}</label>
-      <input
+    <ButtonGroup toggle className='mb-3'>
+      <ToggleButton
+        value={set}
         type="radio"
         name="set"
-        value={set}
-        checked={set === {set}}
+        checked={set === { set }}
         onChange={e => onChange(e)}
-      />
-    </div>
+      >
+        {set}
+      </ToggleButton>
+    </ButtonGroup>
+
+    // <label className="btn btn-secondary btn-lg">
+    //   <input
+    //     type="radio"
+    //     name="set"
+    //     value={set}
+    //     checked={set === { set }}
+    //     onChange={e => onChange(e)}
+    //   /> {set}
+    // </label>
   )
 }

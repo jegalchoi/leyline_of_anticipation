@@ -1,10 +1,16 @@
 import React, { Component } from 'react'
+import { Container, Row, Col } from "react-bootstrap"
+
 import { CardsContainer } from './CardsContainer'
 import { ButtonContainer } from './ButtonContainer'
 import { SetsContainer } from './SetsContainer'
 import { Stats } from './Stats'
 import THB from "./sets/THB.json"
 import ELD from './sets/ELD.json'
+import M20 from './sets/M20.json'
+import WAR from './sets/WAR.json'
+import RNA from './sets/RNA.json'
+import GRN from './sets/GRN.json'
 
 export default class App extends Component {
   constructor() {
@@ -22,6 +28,10 @@ export default class App extends Component {
       library: {
         THB: THB,
         ELD: ELD,
+        M20: M20,
+        WAR: WAR,
+        RNA: RNA,
+        GRN: GRN,
       },
       set: 'THB',
       cards: [],
@@ -93,8 +103,9 @@ export default class App extends Component {
       card =>
         card.text !== undefined &&
         card.frameEffect !== "extendedart" &&
-        card.frameEffect !== "inverted"
-    )
+        card.frameEffect !== "inverted" &&
+        card.frameEffect !== "showcase"
+    );
   }
   setFilter = setRemovedDupes => {
     return setRemovedDupes.filter(
@@ -150,10 +161,9 @@ export default class App extends Component {
     return this.checkCost(cardCastingCost, selectedCastingCost)
   }
   formatCardCastingCost = manaCost => {
-    // console.log(manaCost)
+    console.log(manaCost)
     let cardCastingCost = {};
     [
-      ["Colorless", /[1 - 9]/g],
       ["Black", /B/g],
       ["Blue", /U/g],
       ["Green", /G/g],
@@ -165,8 +175,9 @@ export default class App extends Component {
       } else {
         cardCastingCost[color[0]] = manaCost.match(color[1]).length
       }
+      
     })
-    // console.log(cardCastingCost)
+    console.log(cardCastingCost)
     return cardCastingCost
   }
   checkCost = (cardCastingCost, selectedCastingCost) => {
@@ -185,20 +196,37 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <button onClick={() => console.log(this.state)}>STATE</button>
-        <SetsContainer library={this.state.library} onChange={this.handleSetCards} />
-        <Stats totalCost={this.state.totalCost} count={this.state.filteredCards.length} />
-        {["Colorless", "Black", "Blue", "Green", "Red", "White"].map(
-          (color, idx) => (
-            <ButtonContainer
-              color={color}
-              cost={this.state.castingCost[color]}
-              changeCastingCost={this.handleChangeCastingCost}
-              refreshCards={this.handleRefreshCards}
-              key={idx}
-            />
-          )
-        )}
+        {/* <button onClick={() => console.log(this.state)}>STATE</button> */}
+        <SetsContainer
+          library={this.state.library}
+          onChange={this.handleSetCards}
+          defaultSet={this.state.set}
+        />
+        <div className="container border rounded border-info">
+          <div className="container text-center display-6">
+            Use the bottons to set the opponent's available mana. All
+            instant-speed tricks are shown by default.
+          </div>
+          <div className="row bg-info">
+            {["Colorless", "Black", "Blue", "Green", "Red", "White"].map(
+              (color, idx) => (
+                // <div className="col-sm-6">
+                  <ButtonContainer
+                    color={color}
+                    cost={this.state.castingCost[color]}
+                    changeCastingCost={this.handleChangeCastingCost}
+                    refreshCards={this.handleRefreshCards}
+                    key={idx}
+                  />
+                // </div>
+              )
+            )}
+          </div>
+        </div>
+        <Stats
+          totalCost={this.state.totalCost}
+          count={this.state.filteredCards.length}
+        />
         <CardsContainer cards={this.state.filteredCards} />
       </div>
     );

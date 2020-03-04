@@ -23,6 +23,14 @@ module.exports = {
           'image-webpack-loader?bypassOnDebug&optimizationLevel=7&interlaced=false'
         ]
       },
+      {
+        rules: [
+          {
+            test: /\.css$/,
+            use: ['style-loader', 'css-loader']
+          }
+        ],
+      },
     ]
   },
   devtool: 'source-map',
