@@ -82,18 +82,19 @@ export default class App extends Component {
   }
   selectSet = () => {
     const set = this.state.library[this.state.set].cards
-    // console.log(set)
+    console.log(set)
     return set.map(card => {
       return {
         name: card.name,
         type: card.type,
         text: card.text,
-        frameEffect: card.frameEffect,
         colors: card.colors,
         convertedManaCost: card.convertedManaCost,
         manaCost: card.manaCost,
+        number: card.number,
         link: `https://api.scryfall.com/cards/${card.scryfallId}`,
-        number: card.number
+        frameEffect: card.frameEffect,
+        hasFoil: card.hasFoil,
       }
     })
   }
@@ -104,8 +105,10 @@ export default class App extends Component {
         card.text !== undefined &&
         card.frameEffect !== "extendedart" &&
         card.frameEffect !== "inverted" &&
-        card.frameEffect !== "showcase"
-    );
+        card.frameEffect !== "showcase" &&
+        card.hasFoil &&
+        card.name !== "Ashiok's Forerunner"
+    )
   }
   setFilter = setRemovedDupes => {
     return setRemovedDupes.filter(
@@ -202,9 +205,9 @@ export default class App extends Component {
           defaultSet={this.state.set}
         />
         <div className="container border rounded border-info">
-          <div className="container text-center display-6">
+          <div className="container text-center display-6 m-4">
             Use the bottons to set the opponent's available mana. All
-            instant-speed tricks are shown by default.
+            possible instant-speed tricks are shown by default.
           </div>
           <div className="row bg-info">
             {["Colorless", "Black", "Blue", "Green", "Red", "White"].map(
@@ -226,7 +229,7 @@ export default class App extends Component {
           totalCost={this.state.totalCost}
           count={this.state.filteredCards.length}
         />
-        <CardsContainer cards={this.state.filteredCards} />
+        <CardsContainer set={this.state.set} cards={this.state.filteredCards} />
       </div>
     );
   }

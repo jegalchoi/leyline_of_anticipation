@@ -2,7 +2,7 @@ import React from 'react'
 import {ToggleButton, ButtonGroup, Button } from 'react-bootstrap'
 
 export const Set = ({ set, onChange, defaultSet }) => {
-  console.log(defaultSet)
+  // console.log(defaultSet)
   return (
     <ButtonGroup toggle className='mb-3'>
       <ToggleButton
