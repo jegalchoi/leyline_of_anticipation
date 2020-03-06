@@ -15,15 +15,29 @@ export const Card = ({ card, set, textEnabled }) => {
     // RNA: RNA,
     // GRN: GRN
   }
-  
   return (
-    <div>
-      {/* <h1>{card.name} - card</h1> */}
-      {textEnabled ? 
-      <div>
-        {card.name} - {card.manaCost} - {card.type} - {card.text}
-      </div> : 
-      <img src={sets[`${set}`][`${set}${card.number}`]} alt={card.name} />}
+    <div className="col-9 mx-auto col-md-6 col-lg-3 my-3">
+      <div className="card">
+        <div className="container p-1">
+          {/* <h1>{card.name} - card</h1> */}
+          {textEnabled ? (
+            <div>
+              <p>
+                {card.name} {card.manaCost}
+              </p>
+              
+              <p>{card.type}</p>
+              <h7>{card.text}</h7>
+            </div>
+          ) : (
+            <img
+              className="card-img-top"
+              src={sets[`${set}`][`${set}${card.number}`]}
+              alt={card.name}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 }

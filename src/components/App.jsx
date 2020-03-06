@@ -36,7 +36,8 @@ export default class App extends Component {
       set: 'THB',
       cards: [],
       filteredCards: [],
-      textOnly : false
+      textOnly: false,
+      textButton: 'Text Only Version'
     }
   }
   componentDidMount() {
@@ -198,9 +199,10 @@ export default class App extends Component {
   }
   handleEnableTextOnly = () => {
     this.setState({
-      textOnly: !this.state.textOnly
+      textOnly: !this.state.textOnly,
+      textButton: (this.state.textOnly ? 'Text Only Version' : 'Show Images')
     })
-    console.log(this.state.textOnly)
+    // console.log(this.state.textOnly)
   }
   render() {
     return (
@@ -209,7 +211,7 @@ export default class App extends Component {
         <SetsContainer
           library={this.state.library}
           onChange={this.handleSetCards}
-          defaultSet={this.state.set}
+          selectedSet={this.state.set}
         />
         <div className="container border rounded border-info">
           <div className="container text-center display-6 m-4">
@@ -238,9 +240,9 @@ export default class App extends Component {
           className="btn btn-outline-danger btn-lg btn-block my-5 text-uppercase font-weight-bold"
           onClick={this.handleEnableTextOnly}
         >
-          Text Only Version
+          {this.state.textButton}
         </button>
-        <div className='py-5'>
+        <div className='py-1'>
           <CardsContainer
             set={this.state.set}
             cards={this.state.filteredCards}
