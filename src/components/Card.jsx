@@ -4,7 +4,7 @@ import * as THB from './images/THB'
 import * as ELD from "./images/ELD"
 import * as M20 from './images/M20'
 
-export const Card = ({ card, set }) => {
+export const Card = ({ card, set, textEnabled }) => {
   // console.log(card.img)
 
   const sets = {
@@ -18,8 +18,12 @@ export const Card = ({ card, set }) => {
   
   return (
     <div>
-      <h1>{card.name} - card</h1>
-      <img src={sets[`${set}`][`${set}${card.number}`]} alt={card.name} />
+      {/* <h1>{card.name} - card</h1> */}
+      {textEnabled ? 
+      <div>
+        {card.name} - {card.manaCost} - {card.type} - {card.text}
+      </div> : 
+      <img src={sets[`${set}`][`${set}${card.number}`]} alt={card.name} />}
     </div>
   );
 }

@@ -6,6 +6,7 @@ export const Set = ({ set, onChange, defaultSet }) => {
   return (
     <ButtonGroup toggle className='mb-3'>
       <ToggleButton
+        className='font-weight-bold'
         value={set}
         type="radio"
         name="set"

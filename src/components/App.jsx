@@ -36,6 +36,7 @@ export default class App extends Component {
       set: 'THB',
       cards: [],
       filteredCards: [],
+      textOnly : false
     }
   }
   componentDidMount() {
@@ -195,9 +196,15 @@ export default class App extends Component {
     // console.log(status)
     return status
   }
+  handleEnableTextOnly = () => {
+    this.setState({
+      textOnly: !this.state.textOnly
+    })
+    console.log(this.state.textOnly)
+  }
   render() {
     return (
-      <div>
+      <div className="container">
         {/* <button onClick={() => console.log(this.state)}>STATE</button> */}
         <SetsContainer
           library={this.state.library}
@@ -206,21 +213,19 @@ export default class App extends Component {
         />
         <div className="container border rounded border-info">
           <div className="container text-center display-6 m-4">
-            Use the bottons to set the opponent's available mana. All
-            possible instant-speed tricks are shown by default.
+            Use the bottons to set the opponent's available mana. All possible
+            instant-speed tricks are shown by default.
           </div>
           <div className="row bg-info">
             {["Colorless", "Black", "Blue", "Green", "Red", "White"].map(
               (color, idx) => (
-                // <div className="col-sm-6">
-                  <ButtonContainer
-                    color={color}
-                    cost={this.state.castingCost[color]}
-                    changeCastingCost={this.handleChangeCastingCost}
-                    refreshCards={this.handleRefreshCards}
-                    key={idx}
-                  />
-                // </div>
+                <ButtonContainer
+                  color={color}
+                  cost={this.state.castingCost[color]}
+                  changeCastingCost={this.handleChangeCastingCost}
+                  refreshCards={this.handleRefreshCards}
+                  key={idx}
+                />
               )
             )}
           </div>
@@ -229,7 +234,19 @@ export default class App extends Component {
           totalCost={this.state.totalCost}
           count={this.state.filteredCards.length}
         />
-        <CardsContainer set={this.state.set} cards={this.state.filteredCards} />
+        <button
+          className="btn btn-outline-danger btn-lg btn-block my-5 text-uppercase font-weight-bold"
+          onClick={this.handleEnableTextOnly}
+        >
+          Text Only Version
+        </button>
+        <div className='py-5'>
+          <CardsContainer
+            set={this.state.set}
+            cards={this.state.filteredCards}
+            textEnabled={this.state.textOnly}
+          />
+        </div>
       </div>
     );
   }

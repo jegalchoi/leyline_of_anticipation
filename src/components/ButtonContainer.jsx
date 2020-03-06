@@ -20,14 +20,13 @@ export const ButtonContainer = ({ color, cost, changeCastingCost, refreshCards }
   }
   return (
     // <Col className="bg-dark text-uppercase">
-    <div className="col-lg-2 col-md-2 btn-group-vertical p-3">
+    <div className="col-4 btn-group-vertical p-3">
       {/* <h1>{color} container</h1> */}
       <div className="d-flex justify-content-center">
         <img src={colors[color]} width="25%" />
       </div>
-
       <div className="container text-center mt-2">
-        <h3>{cost}</h3>
+        <h3 className='font-weight-bold'>{cost}</h3>
       </div>
       {["+", "-"].map((delta, idx) => (
         <Button
