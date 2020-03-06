@@ -15,6 +15,7 @@ export const Card = ({ card, set, textEnabled }) => {
     // RNA: RNA,
     // GRN: GRN
   }
+
   return (
     <div className="col-9 mx-auto col-md-6 col-lg-3 my-3">
       <div className="card">
@@ -25,7 +26,6 @@ export const Card = ({ card, set, textEnabled }) => {
               <p>
                 {card.name} {card.manaCost}
               </p>
-              
               <p>{card.type}</p>
               <h7>{card.text}</h7>
             </div>
