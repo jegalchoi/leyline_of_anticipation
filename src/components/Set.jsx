@@ -1,20 +1,29 @@
 import React from 'react'
-import {ToggleButton, ButtonGroup, Button } from 'react-bootstrap'
+import { Consumer } from '../context'
+import { ToggleButton, ButtonGroup } from 'react-bootstrap'
+import PropTypes from 'prop-types'
 
-export const Set = ({ set, onChange, selectedSet }) => {
-  // console.log(set)
+export const Set = ({ set }) => {
   return (
-    <ButtonGroup toggle className='mb-3'>
-      <ToggleButton
-        className='font-weight-bold'
-        value={set}
-        type="radio"
-        name="set"
-        checked={set === selectedSet}
-        onChange={e => onChange(e)}
-      >
-        {set}
-      </ToggleButton>
-    </ButtonGroup>
+    <Consumer>
+      { ({ selectedSet, actions }) => (
+        <ButtonGroup toggle className='mb-3'>
+          <ToggleButton
+            className='font-weight-bold'
+            type="radio"
+            name="set"
+            value={set}
+            checked={set === selectedSet}
+            onChange={e => actions.setCards(e)}
+          >
+            {set}
+          </ToggleButton>
+        </ButtonGroup>
+      )}
+    </Consumer>
   )
+}
+
+Set.propTypes = {
+  set: PropTypes.string.isRequired,
 }

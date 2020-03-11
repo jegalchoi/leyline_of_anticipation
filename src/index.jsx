@@ -1,13 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {MTGProvider} from './context'
+import { Provider } from './context'
 import 'bootstrap/dist/css/bootstrap.css'
 
-import Layout from './components/Layout'
+import { Layout } from './components/Layout'
 
 ReactDOM.render(
-  <MTGProvider>
-    <Layout />
-  </MTGProvider>,
+    <Provider>
+      <Layout />
+    </Provider>,
   document.getElementById("root")
-);
+)

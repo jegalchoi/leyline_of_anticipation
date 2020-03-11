@@ -1,4 +1,4 @@
-import m209 from "./cards/M20/m20-9.jpg"
+import m209 from "./cards/M20/m20-9.jpg";
 export const M209 = m209
 import m2014 from "./cards/M20/m20-14.jpg";
 export const M2014 = m2014
@@ -72,4 +72,3 @@ import m20193 from "./cards/M20/m20-193.jpg";
 export const M20193 = m20193
 import m20198 from "./cards/M20/m20-198.jpg";
 export const M20198 = m20198
-

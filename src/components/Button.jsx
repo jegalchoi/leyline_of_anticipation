@@ -1,12 +1,20 @@
 import React from 'react'
+import { Consumer } from '../context'
 
-export const Button = ({ color, title, delta, changeCastingCost, refreshCards }) => {
+export const Button = ({ color, title, delta }) => {
   return (
-    <button className='btn btn-secondary text-nowrap font-weight-bold my-1' onClick={() => {
-      changeCastingCost(color, +delta)
-      refreshCards()
-      }} >
-      {title}
-    </button>
-  );
+    <Consumer>
+      { context => (
+        <button
+          className='btn btn-secondary text-nowrap font-weight-bold my-1'
+          onClick={() => {
+            context.actions.changeCastingCost(color, +delta)
+            context.actions.refreshCards()
+          }} 
+        >
+          {title}
+        </button>
+      )}
+    </Consumer>
+  )
 }

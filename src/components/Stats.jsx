@@ -1,15 +1,18 @@
 import React from 'react'
-import {MTGConsumer} from '../context'
+import { Consumer } from '../context'
 
-export const Stats = ({ totalCost, count }) => {
+export const Stats = () => {
   return (
-    <MTGConsumer>
-      {value => {
-        <div className="row text-center text-uppercase border border-info rounded mx-auto my-2 p-3">
-          <h1 className="col">Total Casting Cost: {value.totalCost}</h1>
-          <h1 className="col">Total Possibilities: {value.count}</h1>
-        </div>;
+    <Consumer>
+      { ({ totalCost, filteredCards }) => {
+        const count = filteredCards.length;
+        return (
+          <div className="row text-center text-uppercase border border-info rounded mx-auto my-2 p-3">
+            <h1 className="col">Total Casting Cost: {totalCost}</h1>
+            <h1 className="col">Total Possibilities: {count}</h1>
+          </div>
+        )
       }}
-    </MTGConsumer>
-  );
+    </Consumer>
+  )
 }

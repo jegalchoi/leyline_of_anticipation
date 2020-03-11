@@ -1,4 +1,4 @@
-import thb16 from "./cards/THB/thb-16.jpg"
+import thb16 from "./cards/THB/thb-16.jpg";
 import thb19 from "./cards/THB/thb-19.jpg";
 import thb25 from "./cards/THB/thb-25.jpg";
 import thb26 from "./cards/THB/thb-26.jpg";
@@ -41,7 +41,7 @@ import thb192 from "./cards/THB/thb-192.jpg";
 import thb194 from "./cards/THB/thb-194.jpg";
 import thb197 from "./cards/THB/thb-197.jpg";
 
-export const THB16 = thb16
+export const THB16 = thb16;
 export const THB19 = thb19;
 export const THB25 = thb25;
 export const THB26 = thb26;
@@ -83,6 +83,3 @@ export const THB180 = thb180;
 export const THB192 = thb192;
 export const THB194 = thb194;
 export const THB197 = thb197;
-
-
-
