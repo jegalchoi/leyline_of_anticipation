@@ -8,7 +8,7 @@ import PropTypes from 'prop-types'
 export const Card = ({ card }) => {
   return (
     <Consumer>
-      { ({ set, textOnly }) => {
+      { ({ selectedSet, textOnly }) => {
         const sets = 
           {
             THB: THB,
@@ -26,13 +26,13 @@ export const Card = ({ card }) => {
                 { textOnly ? (
                   <div>
                     <h5>{card.name} {card.manaCost}</h5>
-                    <h5>{card.type}</h5>
+                    <h5 className='text-muted'>{card.type}</h5>
                     <p>{card.text}</p>
                   </div>
                 ) : (
                   <img
                     className="card-img-top"
-                    src={sets[`${set}`][`${set}${card.number}`]}
+                    src={sets[`${selectedSet}`][`${selectedSet}${card.number}`]}
                     alt={card.name}
                   />
                 )}

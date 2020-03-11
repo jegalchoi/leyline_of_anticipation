@@ -12,7 +12,7 @@ import PropTypes from 'prop-types'
 export const ButtonContainer = ({ color }) => {
   return (
     <Consumer>
-      { ({ castingCost })=> {
+      { ({ castingCost, actions })=> {
         const colors = {
           Colorless: Colorless,
           Black: Black,

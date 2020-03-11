@@ -30,7 +30,7 @@ export class Provider extends Component {
         RNA: RNA,
         GRN: GRN,
       },
-      set: 'THB',
+      selectedSet: 'THB',
       cards: [],
       filteredCards: [],
       textOnly: false,
@@ -61,7 +61,7 @@ export class Provider extends Component {
         White: 0
       },
       totalCost: 0,
-      set: e.target.value,
+      selectedSet: e.target.value,
       cards: [],
       filteredCards: [],
     })
@@ -76,8 +76,8 @@ export class Provider extends Component {
     })
   }
   selectSet = () => {
-    const set = this.state.library[this.state.set].cards
-    // console.log(set)
+    const set = this.state.library[this.state.selectedSet].cards
+    // console.log(selectedSet)
     return set.map(card => (
       {
         name: card.name,
@@ -125,12 +125,16 @@ export class Provider extends Component {
       let prevCastingCost = prevState.castingCost[color]
       let newState = { castingCost: { ...prevState.castingCost } }
       newState.castingCost[color] = prevCastingCost + delta
-      return (prevCastingCost + delta === -1 ? null : newState)
+      return newState
     })
   }
   handleRefreshCards = () => {
     this.updateTotalCost()
-    setTimeout(() => this.filterCards(), 10)
+    setTimeout(() => 
+      this.state.totalCost === 0 ? 
+      this.showAllInstants() : 
+      this.filterCards()
+    , 10)
   }
   updateTotalCost = () => {
     this.setState(prevState => {
@@ -193,7 +197,7 @@ export class Provider extends Component {
           castingCost: this.state.castingCost,
           totalCost: this.state.totalCost,
           library: this.state.library,
-          set: this.state.set,
+          selectedSet: this.state.selectedSet,
           cards: this.state.cards,
           filteredCards: this.state.filteredCards,
           textOnly: this.state.textOnly,

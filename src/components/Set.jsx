@@ -14,6 +14,7 @@ export const Set = ({ set }) => {
             name="set"
             value={set}
             checked={set === selectedSet}
+            disabled={ set === selectedSet }
             onChange={e => actions.setCards(e)}
           >
             {set}
