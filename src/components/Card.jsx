@@ -3,6 +3,7 @@ import { Consumer } from '../context'
 import * as THB from './images/THB'
 import * as ELD from "./images/ELD"
 import * as M20 from './images/M20'
+import PropTypes from 'prop-types'
 
 export const Card = ({ card }) => {
   return (
@@ -42,4 +43,8 @@ export const Card = ({ card }) => {
       }}
     </Consumer>
   )
+}
+
+Card.propTypes = {
+  card: PropTypes.object.isRequired
 }

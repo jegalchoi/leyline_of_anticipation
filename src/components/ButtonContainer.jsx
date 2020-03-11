@@ -7,11 +7,12 @@ import Blue from "./images/symbols/Blue.png"
 import Green from "./images/symbols/Green.png"
 import Red from "./images/symbols/Red.png"
 import White from "./images/symbols/White.png"
+import PropTypes from 'prop-types'
 
-export const ButtonContainer = ({ color, cost }) => {
+export const ButtonContainer = ({ color }) => {
   return (
     <Consumer>
-      { context=> {
+      { ({ castingCost })=> {
         const colors = {
           Colorless: Colorless,
           Black: Black,
@@ -26,7 +27,7 @@ export const ButtonContainer = ({ color, cost }) => {
               <img src={colors[color]} width="25%" />
             </div>
             <div className="container text-center mt-2">
-              <h3 className='font-weight-bold'>{cost}</h3>
+              <h3 className='font-weight-bold'>{castingCost[color]}</h3>
             </div>
             {["+", "-"].map((delta, idx) => (
               <Button
@@ -41,4 +42,8 @@ export const ButtonContainer = ({ color, cost }) => {
       }}
     </Consumer>
   )
+}
+
+ButtonContainer.propTypes = {
+  color: PropTypes.string.isRequired
 }

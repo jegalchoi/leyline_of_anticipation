@@ -1,5 +1,6 @@
 import React from 'react'
 import { Consumer } from '../context'
+import PropTypes from 'prop-types'
 
 export const Button = ({ color, title, delta }) => {
   return (
@@ -17,4 +18,10 @@ export const Button = ({ color, title, delta }) => {
       )}
     </Consumer>
   )
+}
+
+Button.propTypes = {
+  color: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  delta: PropTypes.string.isRequired
 }

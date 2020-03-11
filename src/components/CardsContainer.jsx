@@ -5,7 +5,7 @@ import { Card } from './Card'
 export const CardsContainer = () => {  
   return (
     <Consumer>
-      { ({ filteredCards, set }) => {
+      { ({ filteredCards }) => {
         const array = 
           {
             1: [],

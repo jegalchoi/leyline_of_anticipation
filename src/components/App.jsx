@@ -23,7 +23,6 @@ export const App = () => {
                 (color, idx) => (
                   <ButtonContainer
                     color={color}
-                    cost={context.actions.changeCastingCost[color]}
                     key={idx}
                   />
                 )
