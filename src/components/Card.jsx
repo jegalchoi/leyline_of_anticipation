@@ -20,7 +20,7 @@ export const Card = ({ card }) => {
           }
 
         return (
-          <div className="col-9 col-lg-3 col-md-6 mx-auto my-3">
+          <div className="col-12 col-lg-2 col-md-3 mx-auto my-3">
             <div className="card">
               <div className="container p-1">
                 { textOnly ? (

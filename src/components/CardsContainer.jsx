@@ -5,7 +5,7 @@ import { Card } from './Card'
 export const CardsContainer = () => {  
   return (
     <Consumer>
-      { ({ filteredCards }) => {
+      { ({ cards, filteredCards, isFiltering }) => {
         const array = 
           {
             1: [],
@@ -23,13 +23,17 @@ export const CardsContainer = () => {
 
         let arrayByCost = [];
         for (const cost in array) {
-          arrayByCost = arrayByCost.concat(array[cost])
+          arrayByCost = [...arrayByCost, ...array[cost]]
         }
 
         return (
-          <div className='container row text-center'>
+          <div className='container row'>
             {
-              (filteredCards.length === 0) ?
+              (isFiltering && filteredCards.length === 0) &&
+              <h1>LOADING...</h1> 
+            }
+            {
+              (!isFiltering && filteredCards.length === 0) ?
               <h1>No cards were found.</h1> :
               arrayByCost.map(card =>
                 <Card

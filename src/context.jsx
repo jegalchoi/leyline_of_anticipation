@@ -10,9 +10,7 @@ import GRN from './components/sets/GRN.json'
 const MTGContext = React.createContext();
 
 export class Provider extends Component {
-  constructor() {
-    super()
-    this.state = {
+  state = {
       castingCost: {
         Colorless: 0,
         Black: 0,
@@ -34,16 +32,17 @@ export class Provider extends Component {
       cards: [],
       filteredCards: [],
       textOnly: false,
-      textButton: 'Text Only Version'
+      textButton: 'Text Only Version',
+      isFiltering: false,
     }
-  }
   componentDidMount() {
     this.showAllInstants()
   }
   showAllInstants = () => {
     this.handlePrepareCards()
     setTimeout(() => this.setState({
-      filteredCards: this.state.cards
+      filteredCards: this.state.cards,
+      isFiltering: false
     }), 10)
   }
   handleSetCards = e => {
@@ -64,6 +63,7 @@ export class Provider extends Component {
       selectedSet: e.target.value,
       cards: [],
       filteredCards: [],
+      isFiltering: true,
     })
   }
   handlePrepareCards = () => {
@@ -72,7 +72,8 @@ export class Provider extends Component {
     const setFiltered = this.setFilter(setRemovedDupes)
     const setFetchedImages = this.setFetchImages(setFiltered)
     this.setState({
-      cards: setFetchedImages
+      cards: setFetchedImages,
+      isFiltering: true,
     })
   }
   selectSet = () => {
@@ -202,6 +203,7 @@ export class Provider extends Component {
           filteredCards: this.state.filteredCards,
           textOnly: this.state.textOnly,
           textButton: this.state.textButton,
+          isFiltering: this.state.isFiltering,
           actions: {
             showAllInstants: this.showAllInstants,
             setCards: this.handleSetCards,

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 export const Button = ({ color, title, delta }) => {
   return (
     <Consumer>
-      { ({ totalCost, castingCost, actions }) => (
+      { ({ castingCost, actions }) => (
         <button
           className='btn btn-secondary text-nowrap font-weight-bold my-1'
           disabled={delta === '-1' && castingCost[color] === 0}

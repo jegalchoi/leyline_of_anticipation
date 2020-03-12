@@ -22,7 +22,7 @@ export const ButtonContainer = ({ color }) => {
           White: White
         }
         return (
-          <div className="col-lg-2 col-md-2 btn-group-vertical p-3">
+          <div className="col-6 col-sm-2 btn-group-vertical p-3">
             <div className="d-flex justify-content-center">
               <img src={colors[color]} width="25%" />
             </div>
