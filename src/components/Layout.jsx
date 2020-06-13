@@ -1,9 +1,8 @@
 import React from 'react'
 import { Jumbotron } from 'react-bootstrap'
-
 import { App } from './App'
-import { Footer } from "./Footer"
-import { Header } from "./Header"
+import { Footer } from './Footer'
+import { Header } from './Header'
 
 export const Layout = () => {
   return (
@@ -16,4 +15,3 @@ export const Layout = () => {
     </React.Fragment>
   )
 }
-

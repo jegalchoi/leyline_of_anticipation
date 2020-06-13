@@ -1,55 +1,60 @@
 import React, { Component } from 'react'
-
-import THB from "./components/sets/THB.json"
+import THB from './components/sets/THB.json'
 import ELD from './components/sets/ELD.json'
 import M20 from './components/sets/M20.json'
 import WAR from './components/sets/WAR.json'
 import RNA from './components/sets/RNA.json'
 import GRN from './components/sets/GRN.json'
 
-const MTGContext = React.createContext();
+const MTGContext = React.createContext()
 
 export class Provider extends Component {
   state = {
-      castingCost: {
-        Colorless: 0,
-        Black: 0,
-        Blue: 0,
-        Green: 0,
-        Red: 0,
-        White: 0
-      },
-      totalCost: 0,
-      library: {
-        THB: THB,
-        ELD: ELD,
-        M20: M20,
-        WAR: WAR,
-        RNA: RNA,
-        GRN: GRN,
-      },
-      selectedSet: 'THB',
-      cards: [],
-      filteredCards: [],
-      textOnly: false,
-      textButton: 'Text Only Version',
-      isFiltering: false,
-    }
+    castingCost: {
+      Colorless: 0,
+      Black: 0,
+      Blue: 0,
+      Green: 0,
+      Red: 0,
+      White: 0,
+    },
+    totalCost: 0,
+    library: {
+      THB: THB,
+      ELD: ELD,
+      M20: M20,
+      WAR: WAR,
+      RNA: RNA,
+      GRN: GRN,
+    },
+    selectedSet: 'THB',
+    cards: [],
+    filteredCards: [],
+    isFiltering: false,
+    textOnly: false,
+    textButton: 'Text Only Version',
+  }
   componentDidMount() {
     this.showAllInstants()
   }
   showAllInstants = () => {
     this.handlePrepareCards()
-    setTimeout(() => this.setState({
-      filteredCards: this.state.cards,
-      isFiltering: false
-    }), 10)
+    setTimeout(
+      () =>
+        this.setState({
+          filteredCards: this.state.cards,
+          isFiltering: false,
+        }),
+      1
+    )
   }
-  handleSetCards = e => {
+  handleSetCards = (e) => {
     this.setSet(e)
-    setTimeout(() => this.showAllInstants(), 10)
+    setTimeout(() => this.showAllInstants(), 1)
   }
-  setSet = e => {
+  setSet = (e) => {
+    e.preventDefault()
+
     this.setState({
       castingCost: {
         Colorless: 0,
@@ -57,7 +62,7 @@ export class Provider extends Component {
         Blue: 0,
         Green: 0,
         Red: 0,
-        White: 0
+        White: 0,
       },
       totalCost: 0,
       selectedSet: e.target.value,
@@ -67,62 +72,62 @@ export class Provider extends Component {
     })
   }
   handlePrepareCards = () => {
-    const setSelectedFields = this.selectSet()
-    const setRemovedDupes = this.setRemoveDupes(setSelectedFields)
-    const setFiltered = this.setFilter(setRemovedDupes)
-    const setFetchedImages = this.setFetchImages(setFiltered)
+    const selectedFieldsFromSet = this.selectFieldsFromSet()
+    const removedDupesFromSet = this.removeDupesFromSet(
+      selectedFieldsFromSet
+    )
+    const filteredInstantsFromSet = this.filterInstantsFromSet(
+      removedDupesFromSet
+    )
+    const fetchedImagesForCards = this.fetchImagesForCards(
+      filteredInstantsFromSet
+    )
     this.setState({
-      cards: setFetchedImages,
+      cards: fetchedImagesForCards,
       isFiltering: true,
     })
   }
-  selectSet = () => {
+  selectFieldsFromSet = () => {
     const set = this.state.library[this.state.selectedSet].cards
-    // console.log(selectedSet)
-    return set.map(card => (
-      {
-        name: card.name,
-        type: card.type,
-        text: card.text,
-        colors: card.colors,
-        convertedManaCost: card.convertedManaCost,
-        manaCost: card.manaCost,
-        number: card.number,
-        link: `https://api.scryfall.com/cards/${card.scryfallId}`,
-        frameEffect: card.frameEffect,
-        hasFoil: card.hasFoil,
-      }
-    ))
+    return set.map((card) => ({
+      name: card.name,
+      type: card.type,
+      text: card.text,
+      colors: card.colors,
+      convertedManaCost: card.convertedManaCost,
+      manaCost: card.manaCost,
+      number: card.number,
+      link: `https://api.scryfall.com/cards/${card.scryfallId}`,
+      frameEffect: card.frameEffect,
+      hasFoil: card.hasFoil,
+    }))
   }
-  setRemoveDupes = setSelectedFields => (
-    setSelectedFields.filter(card =>
-      card.text !== undefined &&
-      card.frameEffect !== "extendedart" &&
-      card.frameEffect !== "inverted" &&
-      card.frameEffect !== "showcase" &&
-      card.hasFoil &&
-      card.name !== "Ashiok's Forerunner"
+  removeDupesFromSet = (selectedFieldsFromSet) =>
+    selectedFieldsFromSet.filter(
+      (card) =>
+        card.text !== undefined &&
+        card.frameEffect !== 'extendedart' &&
+        card.frameEffect !== 'inverted' &&
+        card.frameEffect !== 'showcase' &&
+        card.hasFoil &&
+        card.name !== "Ashiok's Forerunner"
     )
-  )
-  setFilter = setRemovedDupes => (
-    setRemovedDupes.filter(card => 
-      card.type === "Instant" || 
-      card.text.includes("Flash")
+  filterInstantsFromSet = (removedDupesFromSet) =>
+    removedDupesFromSet.filter(
+      (card) => card.type === 'Instant' || card.text.includes('Flash')
     )
-  )
-  setFetchImages = setFiltered => (
-    setFiltered.map(card => {
+  fetchImagesForCards = (filteredInstantsFromSet) =>
+    filteredInstantsFromSet.map((card) => {
       fetch(card.link)
-        .then(response => response.json())
-        .then(json => json.image_uris.small)
-        .then(json => {
+        .then((response) => response.json())
+        .then((json) => json.image_uris.small)
+        .then((json) => {
           card.img = json
         })
       return card
     })
-  )
   handleChangeCastingCost = (color, delta) => {
-    this.setState(prevState => {
+    this.setState((prevState) => {
       let prevCastingCost = prevState.castingCost[color]
       let newState = { castingCost: { ...prevState.castingCost } }
       newState.castingCost[color] = prevCastingCost + delta
@@ -131,43 +136,49 @@ export class Provider extends Component {
   }
   handleRefreshCards = () => {
     this.updateTotalCost()
-    setTimeout(() => 
-      this.state.totalCost === 0 ? 
-      this.showAllInstants() : 
-      this.filterCards()
-    , 10)
+    setTimeout(
+      () =>
+        this.state.totalCost === 0
+          ? this.showAllInstants()
+          : this.loadCards(),
+      10
+    )
   }
   updateTotalCost = () => {
-    this.setState(prevState => {
+    this.setState((prevState) => {
       let totalCost = prevState.totalCost
-      totalCost = Object.values(prevState.castingCost).reduce((a, c) => a + c, 0)
+      totalCost = Object.values(prevState.castingCost).reduce(
+        (a, c) => a + c,
+        0
+      )
       return { totalCost }
     })
   }
-  filterCards = () => {
-    this.setState(prevState => {
+  loadCards = () => {
+    this.setState((prevState) => {
       const totalCost = prevState.totalCost
       let filteredCards = prevState.cards
-      filteredCards = filteredCards.filter(card => 
-        card.convertedManaCost <= totalCost && 
-        this.filterCard(card.manaCost, prevState.castingCost)
+      filteredCards = filteredCards.filter(
+        (card) =>
+          card.convertedManaCost <= totalCost &&
+          this.filterCard(card.manaCost, prevState.castingCost)
       )
       return { filteredCards }
     })
   }
   filterCard = (manaCost, selectedCastingCost) => {
     const cardCastingCost = this.formatCardCastingCost(manaCost)
-    return this.checkCost(cardCastingCost, selectedCastingCost)
+    return this.compareCost(cardCastingCost, selectedCastingCost)
   }
-  formatCardCastingCost = manaCost => {
-    let cardCastingCost = {};
-    [
-      ["Black", /B/g],
-      ["Blue", /U/g],
-      ["Green", /G/g],
-      ["Red", /R/g],
-      ["White", /W/g]
-    ].forEach(color => {
+  formatCardCastingCost = (manaCost) => {
+    let cardCastingCost = {}
+    ;[
+      ['Black', /B/g],
+      ['Blue', /U/g],
+      ['Green', /G/g],
+      ['Red', /R/g],
+      ['White', /W/g],
+    ].forEach((color) => {
       if (manaCost.match(color[1]) == null) {
         cardCastingCost[color[0]] = 0
       } else {
@@ -176,10 +187,13 @@ export class Provider extends Component {
     })
     return cardCastingCost
   }
-  checkCost = (cardCastingCost, selectedCastingCost) => {
+  compareCost = (cardCastingCost, selectedCastingCost) => {
     let status = true
     for (const color in cardCastingCost) {
-      if (cardCastingCost[color] != null && cardCastingCost[color] > selectedCastingCost[color]) {
+      if (
+        cardCastingCost[color] != null &&
+        cardCastingCost[color] > selectedCastingCost[color]
+      ) {
         status = false
       }
     }
@@ -188,45 +202,47 @@ export class Provider extends Component {
   handleEnableTextOnly = () => {
     this.setState({
       textOnly: !this.state.textOnly,
-      textButton: (this.state.textOnly ? 'Text Only Version' : 'Show Images')
+      textButton: this.state.textOnly
+        ? 'Text Only Version'
+        : 'Show Images',
     })
   }
   render() {
     return (
-      <MTGContext.Provider value = {
-        {
+      <MTGContext.Provider
+        value={{
           castingCost: this.state.castingCost,
           totalCost: this.state.totalCost,
           library: this.state.library,
           selectedSet: this.state.selectedSet,
           cards: this.state.cards,
           filteredCards: this.state.filteredCards,
+          isFiltering: this.state.isFiltering,
           textOnly: this.state.textOnly,
           textButton: this.state.textButton,
-          isFiltering: this.state.isFiltering,
           actions: {
             showAllInstants: this.showAllInstants,
             setCards: this.handleSetCards,
             setSet: this.setSet,
             prepareCards: this.handlePrepareCards,
-            selectSet: this.selectSet,
-            setRemoveDupes: this.setRemoveDupes,
-            setFilter: this.setFilter,
-            setFetchImages: this.setFetchImages,
+            selectFieldsFromSet: this.selectFieldsFromSet,
+            removeDupesFromSet: this.removeDupesFromSet,
+            filterInstantsFromSet: this.filterInstantsFromSet,
+            fetchImagesForCards: this.fetchImagesForCards,
             changeCastingCost: this.handleChangeCastingCost,
             refreshCards: this.handleRefreshCards,
             updateTotalCost: this.updateTotalCost,
-            filterCards: this.filterCards,
+            loadCards: this.loadCards,
             filterCard: this.filterCard,
-            checkCost: this.checkCost,
-            enableTextOnly: this.handleEnableTextOnly
-          }
-        }
-      }>
-        { this.props.children }
+            compareCost: this.compareCost,
+            enableTextOnly: this.handleEnableTextOnly,
+          },
+        }}
+      >
+        {this.props.children}
       </MTGContext.Provider>
     )
   }
 }
 
-export const Consumer = MTGContext.Consumer;
+export const Consumer = MTGContext.Consumer
