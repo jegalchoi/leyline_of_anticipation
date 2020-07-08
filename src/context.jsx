@@ -203,7 +203,7 @@ export class Provider extends Component {
     this.setState({
       textOnly: !this.state.textOnly,
       textButton: this.state.textOnly
-        ? 'Text Only Version'
+        ? 'Show Text Only'
         : 'Show Images',
     })
   }
