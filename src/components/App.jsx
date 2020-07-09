@@ -14,9 +14,14 @@ export const App = () => {
 
           <div className='container border rounded border-info'>
             <div className='container text-center display-6 m-3'>
-              Use the bottons to set the opponent's available mana.
-              Possible cards will be shown accordingly. All possible
-              instant-speed tricks are shown by default.
+              <p>
+                Use the bottons to set the opponent's available mana.
+                Possible cards will be shown accordingly.
+              </p>
+              <small className='text-muted text-center'>
+                All possible instant-speed tricks are shown by
+                default.
+              </small>
             </div>
             <div className='row bg-info'>
               {[
