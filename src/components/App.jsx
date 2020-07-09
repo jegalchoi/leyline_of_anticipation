@@ -13,12 +13,12 @@ export const App = () => {
           <SetsContainer />
 
           <div className='container border rounded border-info'>
-            <div className='container text-center display-6 m-3'>
+            <div className='text-center display-6 m-3'>
               <p>
                 Use the bottons to set the opponent's available mana.
                 Possible cards will be shown accordingly.
               </p>
-              <small className='text-muted text-center'>
+              <small className='text-muted'>
                 All possible instant-speed tricks are shown by
                 default.
               </small>
